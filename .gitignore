@@ -1,0 +1,9 @@
+pokemon.db
+test.db
+.history
+.vscode
+__pycache__
+pokemon_venv
+app/__pycache__
+app/.history
+app/.pytest_cache
