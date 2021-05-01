@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional
+from sqlalchemy.orm import relationship
 
 #{"id": 1, "name": "bulbasaur", "height": 0.7, "weight": 6.9, "xp": 64, "types": ["poison", "grass"], "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"}
 
@@ -40,10 +41,9 @@ class User(BaseModel):
     password: str
 
 
-class GetUser():
+class GetUser(BaseModel):
     name    : str
     email   : str
-    password: str
 
     class Config():
         orm_mode = True

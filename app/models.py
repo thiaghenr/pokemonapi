@@ -2,6 +2,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float
 from database import Base
 from typing import List
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship
 
 
 class Pokemon(Base):
@@ -14,14 +15,14 @@ class Pokemon(Base):
     xp      =  Column(Integer)
     image   = Column(String)
 
-    # types = relationship('PokemonType', back_populates = 'pokemon')
+    types = relationship('PokemonType', back_populates = 'pokemon')
 
 class PokemonType(Base):
     __tablename__ = 'pokemontype'
 
     id      = Column(Integer, primary_key = True, index = True)
     name    = Column(String)
-    # pokemon = relationship('Pokemon', back_populates = 'types')
+    pokemon = relationship('Pokemon', back_populates = 'types')
 
 
 class User(Base):

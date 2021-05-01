@@ -3,3 +3,5 @@ uvicorn
 sqlalchemy
 pytest
 requests
+passlib
+bcrypt
