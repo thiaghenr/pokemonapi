@@ -22,7 +22,7 @@ class Pokemon(BaseModel):
     height  : Optional[float] = None
     weight  : Optional[float] = None
     xp      : Optional[int] = None   
-    # types   : List[PokemonTypes]
+    types   : List[PokemonType] = []
     image   : Optional[str]
 
 

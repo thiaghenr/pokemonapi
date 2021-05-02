@@ -23,6 +23,23 @@ app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
 
+
+def test_create_pokemon_type():
+    pokemon_type_eletric = {'name': 'eletric'}
+    eletric_response = client.post('/pokemonType', data = json.dumps(pokemon_type_eletric))
+    new_eletric_type = eletric_response.json()
+
+    assert eletric_response.status_code == 201, eletric_response.text
+    assert new_eletric_type['name'] == pokemon_type_eletric['name']
+
+    pokemon_type_aquatic = {'name': 'aquatic'}
+    aquatic_response = client.post('/pokemonType', data = json.dumps(pokemon_type_aquatic))
+    new_aquatic_type = aquatic_response.json()
+
+    assert aquatic_response.status_code == 201, aquatic_response.text
+    assert new_aquatic_type['name'] == pokemon_type_aquatic['name']
+
+
 def test_create():
     jobossauro  = jobossauro_data()
     raichu      = raichu_data()
@@ -79,21 +96,6 @@ def test_get_pokemon():
 
 
 
-def test_create_pokemon_type():
-    pokemon_type_eletric = {'name': 'eletric'}
-    eletric_response = client.post('/pokemonType', data = json.dumps(pokemon_type_eletric))
-    new_eletric_type = eletric_response.json()
-
-    assert eletric_response.status_code == 201, eletric_response.text
-    assert new_eletric_type['name'] == pokemon_type_eletric['name']
-
-    pokemon_type_aquatic = {'name': 'aquatic'}
-    aquatic_response = client.post('/pokemonType', data = json.dumps(pokemon_type_aquatic))
-    new_aquatic_type = aquatic_response.json()
-
-    assert aquatic_response.status_code == 201, aquatic_response.text
-    assert new_aquatic_type['name'] == pokemon_type_aquatic['name']
-
 
 def test_get_all_pokemon_type():
     response = client.get('/pokemonType')
@@ -129,6 +131,7 @@ def jobossauro_data():
         'height': 1.5,
         'weight': 2.5,
         'xp': 50,
+        'types': pokemon_types_data(),
         'image': 'www.pokemon.com/jobossauro'
     }
 
@@ -140,6 +143,7 @@ def raichu_data():
         'height': 3.5,
         'weight': 7.5,
         'xp': 70    ,
+        'types': pokemon_types_data(),
         'image': "www.pokemon.com/raichu"
     }
 
@@ -151,3 +155,10 @@ def user_thiago():
         'password': '123456',
         'email': 'thiago@email.com'
     }
+
+
+def pokemon_types_data():
+    return [
+        {'name': 'eletric'},
+        {'name': 'aquatic'}
+    ]

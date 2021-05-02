@@ -28,16 +28,28 @@ def get_db():
 
 @app.post('/pokemon', status_code = status.HTTP_201_CREATED, tags = ['Pokemons'])
 def create_pokemon(pokemon: schemas.Pokemon, db: Session = Depends(get_db)):
+    pkm_types = []
+    
+    for tp in pokemon.types:
+        pkm_type = db.query(models.PokemonType).filter(
+            models.PokemonType.name == tp.name).first()
+            
+        association = models.PokemonAssociation(pokemontype_id=pkm_type.id)
+        pkm_types.append(association)
+
     new_pokemon = models.Pokemon(
         name    = pokemon.name  ,
         height  = pokemon.height,
         weight  = pokemon.weight,
         xp      = pokemon.xp    ,
+        types   = pkm_types ,
         image   = pokemon.image
     ) 
+    
     db.add(new_pokemon)
     db.commit()
     db.refresh(new_pokemon)
+    
     return new_pokemon
 
 
