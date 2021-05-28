@@ -12,6 +12,20 @@ class PokemonAssociation(Base):
     pokemontype_id = Column(Integer, ForeignKey('pokemontype.id'), primary_key=True)
 
 
+class PokemonTeamAssociation(Base):
+    __tablename__ = 'pokemon_team_association'
+    team_id = Column(Integer, ForeignKey('pokemonteam.id'), primary_key=True)
+    pokemon_id = Column(Integer, ForeignKey('pokemons.id'), primary_key=True)
+    
+
+
+class UserTeamAssociation(Base):
+    __tablename__ = 'user_team_association'
+
+    team_id = Column(Integer, ForeignKey('pokemonteam.id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+
+
 
 class Pokemon(Base):
     __tablename__ = 'pokemons'
@@ -31,6 +45,14 @@ class PokemonType(Base):
     id      = Column(Integer, primary_key = True, index = True)
     name    = Column(String)
     pokemon = relationship('PokemonAssociation')
+
+
+class PokemonTeam(Base):
+    __tablename__ = 'pokemonteam'
+
+    id = Column(Integer, primary_key = True, index = True)
+    pokemons = relationship('PokemonTeamAssociation')
+    coach = relationship('UserTeamAssociation')
 
 class User(Base):
     __tablename__ = 'users'

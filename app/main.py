@@ -1,6 +1,7 @@
+from logging import exception
 from typing import List, Optional
 
-from fastapi import FastAPI, Depends, status, Response, HTTPException
+from fastapi import FastAPI, Depends, responses, status, Response, HTTPException
 from fastapi.encoders import jsonable_encoder
 from pydantic import  BaseModel
 from database import engine, SessionLocal
@@ -33,7 +34,7 @@ def create_pokemon(pokemon: schemas.Pokemon, db: Session = Depends(get_db)):
     for tp in pokemon.types:
         pkm_type = db.query(models.PokemonType).filter(
             models.PokemonType.name == tp.name).first()
-            
+
         association = models.PokemonAssociation(pokemontype_id=pkm_type.id)
         pkm_types.append(association)
 
@@ -87,6 +88,21 @@ def get_pokemon(pokemon_id, db: Session = Depends(get_db)):
     pokemon = db.query(models.Pokemon).filter(models.Pokemon.id == pokemon_id).first()
     if not pokemon:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = f'Pokemon with the id {pokemon_id} was not found')
+    print("type(pokemon)")
+    print(type(pokemon))
+    print("type(pokemon)")
+    print("=====")
+    print(response_model)
+    pkm_type_association = db.query(models.PokemonAssociation).filter(
+                                        models.PokemonAssociation.pokemon_id == pokemon_id).all()
+
+    import pprint
+    pokemon_types = [{'name': get_first(models.PokemonType, tp_id.pokemontype_id, db).name} 
+                        for tp_id in pkm_type_association]
+    pokemon['types'] = pokemon_types
+    # print(pokemon_types[0].pokemontype_id) 
+    # pprint.PrettyPrinter().pprint(pokemon_types[0].name)
+    
     return pokemon
 
 
@@ -126,6 +142,14 @@ def update_pokemon_type(type_id, pokemon_type: schemas.PokemonType, db: Session 
     return 'Updated'
 
 
+@app.get('/pokemonType/{pokemon_type_id}', status_code = status.HTTP_200_OK, tags = ['Pokemon Types'])
+def get_pokemon_type(pokemon_type_id, db: Session = Depends(get_db)):
+    pokemon_type = db.query(models.PokemonType).filter(models.PokemonType.id == pokemon_type_id).first()
+    if not pokemon_type:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = f'The Pokemon Type with the id {pokemon_type_id} was not found!')
+    return pokemon_type
+
+
 @app.get('/pokemonType', status_code = status.HTTP_200_OK, tags = ['Pokemon Types'])
 def get_all_pokemon_types(db: Session = Depends(get_db)):
     return db.query(models.PokemonType).all()
@@ -136,8 +160,10 @@ def create_user(user: schemas.User, db: Session = Depends(get_db)):
     new_user = models.User(
         name    = user.name  ,
         email  = user.email,
-        password  = hashing.Hash.bcrypt(user.password)
+        password  = hashing.Hash().bcrypt(user.password)
     ) 
+    print('newuser=====')
+    print(new_user)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -151,3 +177,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, 
                             detail = f'The User  with the id {user_id} was not found')
     return user
+
+
+def get_first(table_model, id_table, db):
+    return db.query(table_model).filter(table_model.id == id_table).first()
