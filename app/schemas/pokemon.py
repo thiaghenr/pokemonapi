@@ -19,5 +19,7 @@ class ShowPokemon(BaseModel):
     xp      : Optional[int] = None 
     types : List[ShowPokemonType] = None
     
+    
     class Config():
         orm_mode = True
+

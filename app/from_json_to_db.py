@@ -2,7 +2,7 @@ import json
 
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
-import models
+from models.pokemon import Pokemon
 
 def get_db():
     db = SessionLocal()
@@ -19,7 +19,7 @@ def add_pokemon():
         pokemons = json.load(pokemons)
     db = SessionLocal()
     for pokemon in pokemons['pokemon']:
-        new_pokemon = models.Pokemon(
+        new_pokemon = Pokemon(
             name    = pokemon['name']   ,
             height  = pokemon['height'] ,
             weight  = pokemon['weight'] ,

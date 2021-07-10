@@ -26,4 +26,4 @@ class Pokemon(Base):
     xp      =  Column(Integer)
     image   = Column(String)
 
-    types = relationship('PokemonAssociation')
+    types = relationship('PokemonTypeAssociation')

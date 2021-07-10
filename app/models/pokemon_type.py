@@ -8,4 +8,4 @@ class PokemonType(Base):
 
     id      = Column(Integer, primary_key = True, index = True)
     name    = Column(String)
-    pokemon = relationship('PokemonAssociation')
+    pokemon = relationship('PokemonTypeAssociation')
