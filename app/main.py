@@ -1,17 +1,10 @@
-# from logging import exception
-# from typing import List, Optional
-
-from fastapi import FastAPI#, Depends, responses, status, Response, HTTPException
-# from fastapi.encoders import jsonable_encoder
-# from pydantic import  BaseModel
-from database import engine#, SessionLocal
-# from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from database import engine
 
 from models import pokemon, pokemon_type, team, user
 from routers import pokemon as pokemon_router
 from routers import pokemon_type as pokemon_type_router
 
-# import models, schemas, hashing
 # do not forget it
 # https://docs.python.org/3/library/http.html#http.HTTPStatus
 
