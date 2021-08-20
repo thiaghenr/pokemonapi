@@ -23,6 +23,12 @@ def create_pokemon_type(pokemon_type: pokemon_type_schema, db: Session = Depends
 
 @router.delete('/pokemonType/{type_id}', status_code = status.HTTP_204_NO_CONTENT, tags = ['Pokemon Types'])
 def delete_pokemon_type(type_id, db: Session = Depends(get_db)):
+    print('pokemon_type_model.id')
+    print(pokemon_type_model.id)
+    print('pokemon_type_model.id')
+    print('type_id')
+    print(type_id)
+    print('type_id')
     type_query = db.query(pokemon_type_model).filter(pokemon_type_model.id == type_id)
     if not type_query.first():
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, 

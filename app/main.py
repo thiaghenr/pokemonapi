@@ -15,7 +15,6 @@ app = FastAPI(
 )
 
 
-
 pokemon_type.Base.metadata.create_all(engine)
 pokemon.Base.metadata.create_all(engine)
 user.Base.metadata.create_all(engine)

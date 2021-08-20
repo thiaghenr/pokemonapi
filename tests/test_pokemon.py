@@ -1,16 +1,11 @@
 import json
-from fastapi.testclient import TestClient
-from app.main import app
+from test_main import client
 
-client = TestClient(app)
 
 class TestPokemon():
 
-    # def __init__(self, client) -> None:
-    #     self.client = client
-
     def test_create_pokemon_type(self):
-    
+        # POKEMON TYPE MODEL
         pokemon_type_eletric = {'name': 'eletric'}
         eletric_response = client.post('/pokemonType', data = json.dumps(pokemon_type_eletric))
         new_eletric_type = eletric_response.json()
@@ -26,7 +21,24 @@ class TestPokemon():
         assert new_aquatic_type['name'] == pokemon_type_aquatic['name']
 
 
-    def test_create(self):
+    def test_update_pokemon_type(self):
+        pokemon_type_eletric = {'name': 'eletric'}
+        pokemon_id = 1
+        response = client.put(f'/pokemonType/{pokemon_id}', data = json.dumps(pokemon_type_eletric))
+        assert response.status_code == 202
+
+
+    def test_get_all_pokemon_type(self):
+        response = client.get('/pokemonType')
+        print('pokemon_types')
+        print(response.json())
+        print('pokemon_types')
+        assert response.status_code == 200
+        assert len(response.json()) == 2
+
+
+    # POKEMON MODEL
+    def test_create_pokemon(self):
         jobossauro  = self.jobossauro_data()
         raichu      = self.raichu_data()
 
@@ -46,11 +58,8 @@ class TestPokemon():
         assert new_raichu['weight'] == raichu['weight']
 
 
-    def test_get_all(self):
+    def test_get_all_pokemon(self):
         response = client.get('/pokemon')
-        print('response')
-        print(response)
-        print('=======')
         assert response.status_code == 200
         assert len(response.json()) == 2
 
@@ -73,13 +82,6 @@ class TestPokemon():
         assert pokemon['name'] == jobossauro['name']
         assert pokemon['weight'] == jobossauro['weight']
 
-
-
-
-    def test_get_all_pokemon_type(self):
-        response = client.get('/pokemonType')
-        assert response.status_code == 200
-        assert len(response.json()) == 2
 
 
     def jobossauro_data(self):

@@ -26,16 +26,6 @@ def get_pokemon_to_show(pokemon: pokemon_model, pokemon_types: List[pokemon_type
     return pokemon_to_show
 
 
-# def get_pokemon_types(pokemon_association, db):
-#     return [get_pokemon_type(tp_id.pokemontype_id, db)
-#                         for tp_id in pokemon_association]
-
-
-# def get_pokemon_association(pokemon_id, db):
-#     return db.query(models.PokemonAssociation).filter(
-#                                         models.PokemonAssociation.pokemon_id == pokemon_id).all()
-
-
 @router.post('/pokemon', status_code = status.HTTP_201_CREATED, tags = ['Pokemons'])
 def create_pokemon(pokemon: pokemon_schema, db: Session = Depends(get_db)):
     pkm_types = []
