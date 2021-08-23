@@ -1,5 +1,5 @@
 import sys
-sys.path.append('YOUR/APP/PATH') #/home/user/Desktop/app
+sys.path.append('/home/thiaghenr/personal_projects/fastapi/pokemon/app') #/home/user/Desktop/app
 import sys
 from fastapi.testclient import TestClient
 from test_database import test_engine, override_get_db

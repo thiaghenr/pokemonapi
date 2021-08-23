@@ -15,14 +15,13 @@ router = APIRouter()
 
 
 def get_pokemon_to_show(pokemon: pokemon_model, pokemon_types: List[pokemon_type_model]) -> show_pokemon_schema:
-    pokemon_to_show = show_pokemon_schema
-
-    pokemon_to_show.name   = pokemon.name
-    pokemon_to_show.height = pokemon.height
-    pokemon_to_show.weight = pokemon.weight
-    pokemon_to_show.xp     = pokemon.xp
-    pokemon_to_show.types  = pokemon_types    
-    
+    pokemon_to_show = show_pokemon_schema(
+        name = pokemon.name,
+        height = pokemon.height,
+        weight = pokemon.weight,
+        xp = pokemon.xp,
+        types = pokemon_types
+    )    
     return pokemon_to_show
 
 
@@ -92,11 +91,10 @@ def get_pokemon(pokemon_id, db: Session = Depends(get_db)):
 @router.get('/pokemon', response_model = List[show_pokemon_schema], tags = ['Pokemons'])
 def get_all(db: Session = Depends(get_db)):
     pokemons = db.query(pokemon_model).all()
-    print('aa')
-    show_pokemons = [
-        get_pokemon_to_show(pokemon, get_pokemon_types(get_pokemon_association(pokemon.id, db), db))
-        for pokemon in pokemons
-    ]
+    show_pokemons = []
+    for pokemon in pokemons:
+        to_show = get_pokemon_to_show(pokemon, get_pokemon_types(get_pokemon_association(pokemon.id, db), db))
+        show_pokemons.append(to_show)
     return show_pokemons
 
 
