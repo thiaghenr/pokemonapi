@@ -4,62 +4,39 @@ from database import get_db
 from models.pokemon_type import PokemonType as pokemon_type_model
 from schemas.pokemon_type import ShowPokemonType as show_pokemon_type_schema
 from schemas.pokemon_type import PokemonType as pokemon_type_schema
-
+from controller import pokemon_type as pkm_type_controller
 from sqlalchemy.orm import Session
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/pokemonType',
+    tags = ['Pokemon Types']
+)
 
-@router.post('/pokemonType', status_code = status.HTTP_201_CREATED, tags = ['Pokemon Types'])
+@router.post('', status_code = status.HTTP_201_CREATED)
 def create_pokemon_type(pokemon_type: pokemon_type_schema, db: Session = Depends(get_db)):
-    new_pokemon_type = pokemon_type_model(
-        name = pokemon_type.name
-    )
-    db.add(new_pokemon_type)
-    db.commit()
-    db.refresh(new_pokemon_type)
+    new_pokemon_type = pkm_type_controller.create(pokemon_type, db)
     return new_pokemon_type
 
 
-@router.delete('/pokemonType/{type_id}', status_code = status.HTTP_204_NO_CONTENT, tags = ['Pokemon Types'])
+@router.delete('/{type_id}', status_code = status.HTTP_204_NO_CONTENT)
 def delete_pokemon_type(type_id, db: Session = Depends(get_db)):
-    print('pokemon_type_model.id')
-    print(pokemon_type_model.id)
-    print('pokemon_type_model.id')
-    print('type_id')
-    print(type_id)
-    print('type_id')
-    type_query = db.query(pokemon_type_model).filter(pokemon_type_model.id == type_id)
-    if not type_query.first():
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, 
-                            detail = f'The Pokemon Type with the id {type_id} was not found')
-    type_query.delete(synchronize_session = False)
-    db.commit()
-
+    pkm_type_controller.delete(type_id, db)
     return 'Deleted'
 
 
-@router.put('/pokemonType/{type_id}', status_code = status.HTTP_202_ACCEPTED, tags = ['Pokemon Types'])
+@router.put('/{type_id}', status_code = status.HTTP_202_ACCEPTED)
 def update_pokemon_type(type_id, pokemon_type: pokemon_type_schema, db: Session = Depends(get_db)):
-    type_query = db.query(pokemon_type_model).filter(pokemon_type_model.id == type_id)
-    if not type_query.first():
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, 
-                            detail = f'The Pokemon Type with the id {type_id} was not found')
-    pokemon_type = jsonable_encoder(pokemon_type)
-    type_query.update(pokemon_type)
-    db.commit()
-
+    pkm_type_controller.update(type_id, pokemon_type, db)
     return 'Updated'
 
 
-@router.get('/pokemonType/{pokemon_type_id}', status_code = status.HTTP_200_OK, response_model = show_pokemon_type_schema, tags = ['Pokemon Types'])
+@router.get('/{pokemon_type_id}', status_code = status.HTTP_200_OK, response_model = show_pokemon_type_schema)
 def get_pokemon_type(pokemon_type_id, db: Session = Depends(get_db)):
-    pokemon_type = db.query(pokemon_type_model).filter(pokemon_type_model.id == pokemon_type_id).first()
-    if not pokemon_type:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = f'The Pokemon Type with the id {pokemon_type_id} was not found!')
+    pokemon_type = pkm_type_controller.get(pokemon_type_id, db)
     return pokemon_type
 
 
-@router.get('/pokemonType', status_code = status.HTTP_200_OK, tags = ['Pokemon Types'])
+@router.get('', status_code = status.HTTP_200_OK)
 def get_all_pokemon_types(db: Session = Depends(get_db)):
     return db.query(pokemon_type_model).all()

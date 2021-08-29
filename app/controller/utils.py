@@ -1,4 +1,4 @@
-from .pokemon_type import get_pokemon_type
+from routers.pokemon_type import get_pokemon_type
 
 
 def get_pokemon_types(pokemon_association, db):
