@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Check out the repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v1
@@ -26,4 +26,4 @@ jobs:
         context: .
         file: Dockerfile
         push: true
-        tags: ghcr.io/thiaghenr/pokemon-api:1.0.1
+        tags: ghcr.io/thiaghenr/pokemonapi:1.0.2
