@@ -26,4 +26,4 @@ jobs:
         context: .
         file: Dockerfile
         push: true
-        tags: ghcr.io/thiaghenr/pokemon-api:1.0.0
+        tags: ghcr.io/thiaghenr/pokemon-api:1.0.1
